@@ -58,17 +58,17 @@ public class GalleryActivity
         // for this class.
         // See this guide if you have any difficulties.
         // https://developer.android.com/training/basics/firstapp/starting-activity.html
-        // TODO - you fill in here.
-		
+        Intent mIntent = new Intent(context, GalleryActivity.class);
 
         // Put the received list of input URLs as an intent
         // use putParcelableArrayListExtra(String, ArrayList<Uri>) on the intent
         // using the predefined INTENT_EXTRA_URLS extra name.
-        // TODO - you fill in here.
-		
+        Bundle mBundle = new Bundle();
+        mBundle.putParcelableArrayList(INTENT_EXTRA_URLS, inputUrls);
+        mIntent.putExtras(mBundle);
 
         // Return the intent.
-        // TODO - you fill in here.
+        return mIntent;
 		
     }
 
@@ -94,7 +94,10 @@ public class GalleryActivity
             // Call local help method to extract the URLs from the activity's
             // starting intent and pass these URLs into the super class using
             // the setItems() helper method.
-            // TODO - you fill in here.
+            Intent intent = getIntent();
+            List<Uri> items = extractInputUrlsFromIntent(intent);
+            if( items != null || items.isEmpty()==false)
+                setItems(items);
 			
         } else {
             // The activity is being recreated after configuration change.
@@ -119,8 +122,12 @@ public class GalleryActivity
         // Next, validate the extracted list URL strings by calling the local
         // validateInput() helper method. If the entire list of received URLs
         // are valid, then return this list. Otherwise return null.
-        // TODO - you fill in here.
-		
+        ArrayList<Uri> urls  = intent.getParcelableArrayListExtra(INTENT_EXTRA_URLS);
+
+        if (validateInput(urls) == true)
+            return urls;
+        else
+            return null;
     }
 
     /**
@@ -136,21 +143,30 @@ public class GalleryActivity
         //
         // If the list is null call ViewUtils.showToast() to display the
         // string R.string.input_url_list_is_null.
+        if( inputUrls == null) {
+            ViewUtils.showToast(this, R.string.input_url_list_is_null);
+            return false;
+        }
+
         //
         // If the list has a size of 0 then call ViewUtils.showToast()
         // to display the the string R.string.input_url_list_is_empty
-        //
+        if( inputUrls.isEmpty() == true) {
+            ViewUtils.showToast(this, R.string.input_url_list_is_empty);
+            return false;
+        }
+
         // Otherwise check if each list entry is valid using the
         // UrlUtils.isValidUrl() helper and if any URL is not valid
         // return false.
-        //
+        for (Uri p : inputUrls) {
+            if( UriUtils.isValidUrl(p.toString()) == false)
+                return false;
+        }
+
         // Return true if all the URLs are valid.
-
-        // TODO - you fill in here.
-		
-
         // Input passed all tests, so return true.
-        // TODO - you fill in here.
+        return true;
 		
     }
 

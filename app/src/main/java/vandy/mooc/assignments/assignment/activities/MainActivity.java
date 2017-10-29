@@ -1,11 +1,17 @@
 package vandy.mooc.assignments.assignment.activities;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import android.content.Intent;
+
+import android.widget.EditText;
+
 import java.util.ArrayList;
 
+import vandy.mooc.assignments.R;
 import vandy.mooc.assignments.framework.application.activities.MainActivityBase;
 
 /**
@@ -58,7 +64,12 @@ public class MainActivity extends MainActivityBase {
     @Override
     protected void startDownload(ArrayList<Uri> urls) {
         // Start the Gallery Activity with the Uri(s) passed in.
-        // TODO - you fill in here.
+
+        // Use the static function of GalleryActivity to create the intent
+        Intent intent = GalleryActivity.makeStartIntent(this, urls);
+
+        // Invoke the GalleryActivity via intent
+        startActivity(intent);
 		
     }
 
